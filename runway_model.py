@@ -84,8 +84,8 @@ def gram_matrix(input_tensor):
 
 def get_feature_representations(model, content_img, style_img) :
     # Load images
-    content_image = load_and_process_img(content_path)
-    style_image = load_and_process_img(style_path)
+    content_image = load_and_process_img(content_img)
+    style_image = load_and_process_img(style_img)
   
     # Compute content and style features
     style_outputs = model(style_image)
