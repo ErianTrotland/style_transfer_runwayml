@@ -1,6 +1,8 @@
 python: 3.6
 entrypoint: python runway_model.py
 cuda: 10.0
+spec:
+    cpu: False
+    gpu: True
 build_steps:
-    - pip install runway-python numpy Pillow
-    - if_gpu: pip install tensorflow-gpu
+    - pip install runway-python numpy Pillow tensorflow-gpu
