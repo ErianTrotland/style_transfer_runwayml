@@ -11,7 +11,7 @@ from tensorflow.python.keras import backend as K
 import runway
 from runway import image
 
-tf.enable_eager_execution()
+# tf.enable_eager_execution()
 
 # Load image as an array
 def load_img(img):
@@ -135,11 +135,11 @@ def compute_grads(cfg):
 
 # Performs the style transfer and displays the progress! :)
 def run_style_transfer(model, init_image):
-	
-	num_iterations=800
-	content_weight=1e3
-	style_weight = 1e-2 
-	style_path = "./the-starry-night.jpg"
+    
+    num_iterations=800
+    content_weight=1e3
+    style_weight = 1e-2 
+    style_path = "./the-starry-night.jpg"
     model = get_model() 
     for layer in model.layers:
         layer.trainable = False
@@ -195,14 +195,14 @@ def run_style_transfer(model, init_image):
     return best_img, best_loss
 
 
-@runway.setup()
+@runway.setup(options={})
 def setup():
     return get_model()
 
 @runway.command('convert', inputs={ 'image': image }, outputs={ 'output': image })
 def sample(model, inputs):
     
-	best_img, best_loss = run_style_transfer(model, np.array(inputs['image']))
+    best_img, best_loss = run_style_transfer(model, np.array(inputs['image']))
     return { "image": best_img}
 
 if __name__ == "__main__":
