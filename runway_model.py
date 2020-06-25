@@ -201,9 +201,8 @@ def setup():
 
 @runway.command('convert', inputs={ 'image': image }, outputs={ 'output': image })
 def sample(model, inputs):
-    
-    best_img, best_loss = run_style_transfer(model, np.array(inputs['image']))
+    best_img, best_loss = run_style_transfer(model, inputs['image'])
     return { "image": best_img}
 
 if __name__ == "__main__":
-    runway.run()
+    runway.run(host='0.0.0.0', port=8000)
