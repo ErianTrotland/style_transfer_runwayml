@@ -1,3 +1,7 @@
+"""
+Style Transfer wrapped with Runway ML API
+"""
+
 import numpy as np
 import functools
 import tensorflow as tf
@@ -7,11 +11,9 @@ from tensorflow.python.keras import models
 from tensorflow.python.keras import losses
 from tensorflow.python.keras import layers
 from tensorflow.python.keras import backend as K
-
 import runway
 from runway import image
 
-# tf.enable_eager_execution()
 
 # Load image as an array
 def load_img(img):
@@ -25,11 +27,12 @@ def load_img(img):
     img = np.expand_dims(img, axis=0)
     return img
     
-# Load image into tensorflow's VGG19 pre-trained convolutional network
+
 def load_and_process_img(img):
     img = load_img(img)
     img = tf.keras.applications.vgg19.preprocess_input(img)
     return img
+
 
 def deprocess_img(processed_img):
     x = processed_img.copy()
@@ -65,22 +68,25 @@ def get_model() :
     # Build the model 
     return models.Model(vgg.input, model_outputs)
 
+
 def get_content_loss(base_content, target) :
     return tf.reduce_mean(tf.square(base_content - target))
- 
+
+
 def get_style_loss(base_style, gram_target):
     height, width, channels = base_style.get_shape().as_list()
     gram_style = gram_matrix(base_style)
   
     return tf.reduce_mean(tf.square(gram_style - gram_target))
 
-# Did not quite understand exactly what a gram matrix is and/or does
+
 def gram_matrix(input_tensor):
     channels = int(input_tensor.shape[-1])
     a = tf.reshape(input_tensor, [-1, channels])
     n = tf.shape(a)[0]
     gram = tf.matmul(a, a, transpose_a=True)
     return gram / tf.cast(n, tf.float32)
+
 
 def get_feature_representations(model, content_img, style_img) :
     # Load images
@@ -126,12 +132,14 @@ def compute_loss(model, loss_weights, init_image, gram_style_features, content_f
     loss = style_score + content_score 
     return loss, style_score, content_score
 
+
 def compute_grads(cfg):
     with tf.GradientTape() as tape : 
         all_loss = compute_loss(**cfg)
         
     total_loss = all_loss[0]
     return tape.gradient(total_loss, cfg['init_image']), all_loss
+
 
 # Performs the style transfer and displays the progress! :)
 def run_style_transfer(model, init_image):
@@ -154,10 +162,7 @@ def run_style_transfer(model, init_image):
     init_image = load_and_process_img(init_image)
     init_image = tf.Variable(init_image, dtype=tf.float32)
     # Create our optimizer
-    opt = tf.train.AdamOptimizer(learning_rate=5, beta1=0.99, epsilon=1e-1)
-
-    # For displaying intermediate images 
-    iter_count = 1
+    opt = tf.optimizers.Adam(learning_rate=5, beta_1=0.99, epsilon=1e-1)
   
     # Store best results
     best_loss, best_img = float('inf'), None
@@ -198,6 +203,7 @@ def run_style_transfer(model, init_image):
 @runway.setup(options={})
 def setup():
     return get_model()
+
 
 @runway.command('convert', inputs={ 'image': image }, outputs={ 'output': image })
 def sample(model, inputs):
