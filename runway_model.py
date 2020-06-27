@@ -186,6 +186,9 @@ def run_style_transfer(model, init_image):
   
     imgs = []
     for i in range(num_iterations):
+        if i % 50 == 0:
+            print('iteration %d'%i)
+        
         grads, all_loss = compute_grads(cfg)
         loss, style_score, content_score = all_loss
         opt.apply_gradients([(grads, init_image)])
