@@ -5,4 +5,4 @@ spec:
     cpu: False
     gpu: True
 build_steps:
-    - pip install runway-python numpy Pillow tensorflow-gpu==2.1.0
+    - pip install runway-python numpy Pillow tensorflow-gpu==2.0.0
