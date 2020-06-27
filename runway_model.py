@@ -188,7 +188,7 @@ def run_style_transfer(model, init_image):
     for i in range(num_iterations):
         if i % 50 == 0:
             print('iteration %d'%i)
-        
+
         grads, all_loss = compute_grads(cfg)
         loss, style_score, content_score = all_loss
         opt.apply_gradients([(grads, init_image)])
@@ -208,10 +208,10 @@ def setup():
     return get_model()
 
 
-@runway.command('convert', inputs={'image': image}, outputs={'output': image})
+@runway.command('convert', inputs={'image': image}, outputs={'image': image})
 def sample(model, inputs):
     best_img, best_loss = run_style_transfer(model, inputs['image'])
-    return {"output": best_img}
+    return best_img
 
 
 if __name__ == "__main__":
