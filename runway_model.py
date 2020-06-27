@@ -215,4 +215,4 @@ def sample(model, inputs):
 
 
 if __name__ == "__main__":
-    runway.run(host='0.0.0.0', port=8000)
+    runway.run()
